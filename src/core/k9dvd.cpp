@@ -18,6 +18,12 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
+#include "config.h"
+//#include <stdlib.h>
+//#include <time.h>
+//#include <fcntl.h>
+//#include <sys/stat.h>
+
 #include "k9dvd.h"
 #include "k9dvdtitle.h"
 #include "k9dvdtitleset.h"
@@ -25,7 +31,6 @@
 #include "k9dvdprogress.h"
 #include "k9ifo2.h"
 #include <QApplication>
-#include <sys/stat.h>
 
 
 k9DVDTitle* k9DVD::gettitle(int num) {

@@ -1,54 +1,59 @@
 project(k9copy)
-set (VERSION 3.0.3)
+set (VERSION 3.0.3.0000)
+cmake_minimum_required(VERSION 3.0)
 
 # where to look first for cmake modules, before ${CMAKE_ROOT}/Modules/ is checked
 
-option(QT5_BUILD "Build with Qt5/KF5" OFF) 
 #Options ON or OFF OFF=QT4
-
+option(QT5_BUILD "Build with Qt5/KF5" OFF) 
 if(QT5_BUILD)			#With above Setting this corresponds to my check of:     #if QT_VERSION >= 0x050000 
   message("Qt5 Version")
 else()
   message("Qt4 Version")
 endif()
 
-#SET(CMAKE_BUILD_TYPE Debug)
+SET(CMAKE_BUILD_TYPE Debug)
+
+include(FindPkgConfig)
+
 
 if(QT5_BUILD)
-# Add "tags" target and make my_project depending on this target.
-set_source_files_properties(tags PROPERTIES GENERATED true)
-add_custom_target(SCRIPTED_EDITS
+  # Add "tags" target and make my_project depending on this target.
+  set_source_files_properties(tags PROPERTIES GENERATED true)
+  add_custom_target(SCRIPTED_EDITS
     COMMAND chmod +x ${CMAKE_SOURCE_DIR}/setupUI4Qt5.sh && ${CMAKE_SOURCE_DIR}/setupUI4Qt5.sh
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
+  find_package(ECM REQUIRED NO_MODULE)
+  set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
+  Include(ECMInstallIcons)
+  include(KDEInstallDirs)
+  include(KDECompilerSettings)
+  include(KDECMakeSettings)
+  include(FeatureSummary)
 
-find_package(ECM REQUIRED NO_MODULE)
-set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
-Include(ECMInstallIcons)
-include(KDEInstallDirs)
-include(KDECompilerSettings)
-include(KDECMakeSettings)
-include(FeatureSummary)
+  find_package(Phonon4Qt5 REQUIRED)
+  find_package(X11 REQUIRED)
+  find_package(Qt5X11Extras REQUIRED)
+  find_package(Qt5Xml REQUIRED) 
+  find_package(Qt5DBus REQUIRED)
+  find_package(Qt5Gui REQUIRED)
+  find_package(Qt5Widgets REQUIRED)
 
-find_package(Phonon4Qt5 REQUIRED)
-find_package(X11 REQUIRED)
-find_package(Qt5X11Extras REQUIRED)
-find_package(Qt5Xml REQUIRED) 
-find_package(Qt5DBus REQUIRED)
-find_package(Qt5Gui REQUIRED)
-find_package(Qt5Widgets REQUIRED)
-
-find_package(KF5 COMPONENTS REQUIRED I18n Config Su CoreAddons WidgetsAddons DocTools XmlGui Solid KIO IconThemes)
-
+  find_package(KF5 COMPONENTS REQUIRED I18n Config Su CoreAddons WidgetsAddons DocTools XmlGui Solid KIO IconThemes)
+  include_directories(
+    /usr/include/KF5
+    /usr/include/KF5/Solid  
+  )
 else()
-SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
-set_source_files_properties(tags PROPERTIES GENERATED true)
-add_custom_target(SCRIPTED_EDITS
+  SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+  set_source_files_properties(tags PROPERTIES GENERATED true)
+  add_custom_target(SCRIPTED_EDITS
     COMMAND chmod +x ${CMAKE_SOURCE_DIR}/setupUI4Qt4.sh && ${CMAKE_SOURCE_DIR}/setupUI4Qt4.sh
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
-find_package(KDE4 REQUIRED)
-include (KDE4Defaults)
+  find_package(KDE4 REQUIRED)
+  include (KDE4Defaults)
 endif(QT5_BUILD)
 
 INCLUDE(CheckFunctionExists)
@@ -58,11 +63,21 @@ INCLUDE(CMakeDetermineSystem)
 INCLUDE(CheckIncludeFiles)
 INCLUDE(FindLibMpeg2)
 INCLUDE(FindXine)
-#INCLUDE(FindAvcodec)
+INCLUDE(FindAvcodec)
+pkg_search_module(AVCODEC libavcodec REQUIRED)
+
+
 INCLUDE(FindAvformat)
-#INCLUDE(FindAvutil)
+INCLUDE(FindAvutil)
 INCLUDE(FindFFmpegScale)
-#INCLUDE(FindLibDvdread)
+
+INCLUDE(FindLibDvdread)
+##TODO: PTZ161103 use libdvdread-dev, libdvdnav-dev
+#we have dvdnav.pc dvdread.pc
+###################################
+pkg_search_module(DVDREAD dvdread REQUIRED)
+pkg_search_module(DVDNAV dvdnav REQUIRED)
+
 
 # usage: CHECK_INCLUDE_FILES (<header> <RESULT_VARIABLE> )
 CHECK_INCLUDE_FILES(inttypes.h      HAVE_INTTYPES_H)                    # inttypes.h
@@ -74,6 +89,8 @@ CHECK_INCLUDE_FILES(sys/stat.h      HAVE_SYS_STAT_H)                    # stat.h
 CHECK_INCLUDE_FILES(sys/types.h     HAVE_SYS_TYPES_H)                   # types.h
 CHECK_INCLUDE_FILES(unistd.h        HAVE_UNISTD_H)                      # unistd.h
 CHECK_INCLUDE_FILES(malloc.h        HAVE_MALLOC_H)                      # malloc.h
+CHECK_INCLUDE_FILES(time.h          HAVE_TIME_H)
+
 
 FINDFFMPEGSCALE("swscale")
 
@@ -87,6 +104,10 @@ CONFIGURE_FILE(config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 ########################################
 MESSAGE(STATUS "Checking dependencies" )
 FINDXINE("xine.h" "xine")
+#libxine-dev
+pkg_search_module(XINE libxine REQUIRED)
+
+
 FINDLIBMPEG2("mpeg2dec/mpeg2.h" "mpeg2")
 FIND_LIBRARY(LIBMPEG2CONVERT_LIBRARY NAMES mpeg2convert PATHS )
 IF (LIBMPEG2CONVERT_LIBRARY)
@@ -106,13 +127,20 @@ ENDIF (LIBDL_LIBRARY)
 
 
 #FINDAVFORMAT("avformat")
-#FINDAVCODEC("avcodec")
-#FINDAVUTIL("avutil")
+FINDAVCODEC("avcodec")
+FINDAVUTIL("avutil")
 
 add_definitions( -D__STDC_LIMIT_MACROS -D__STDC_CONSTANT_MACROS)
-add_subdirectory( src/libdvdnav-NOW) #from dvdnav
-add_subdirectory( src/libdvdnav-NOW/dvdnav)
-add_subdirectory( src/libdvdnav-NOW/vm)
+
+#PTZ141223 no CMakeLists.txt ? how this?
+#add_subdirectory( src/libdvdnav-NOW) #from dvdnav
+#add_subdirectory( src/libdvdnav-NOW/dvdnav)
+#add_subdirectory( src/libdvdnav-NOW/vm)
+include_directories(
+  ${DVDREAD_INCLUDE_DIR}
+  ${DVDNAV_INCLUDE_DIR}
+)
+
 add_subdirectory( src/core )
 add_subdirectory( src/mpeg2)
 add_subdirectory(src/vamps)
@@ -126,8 +154,8 @@ add_subdirectory(data)
 add_subdirectory(po)
 add_subdirectory(doc)
 
+
 include_directories(
- ${CMAKE_CURRENT_SOURCE_DIR}/src/libdvdnav-NOW #from dvdnav
  ${CMAKE_CURRENT_SOURCE_DIR}/src/devices
  ${CMAKE_CURRENT_SOURCE_DIR}/src/core
  ${CMAKE_CURRENT_SOURCE_DIR}/src/vamps
@@ -139,17 +167,27 @@ include_directories(
  ${CMAKE_CURRENT_SOURCE_DIR}/src/import
  ${CMAKE_CURRENT_SOURCE_DIR}/src/player
  ${CMAKE_CURRENT_SOURCE_DIR}/src/subtitles
- ${CMAKE_CURRENT_SOURCE_DIR}/src/libdvdread-NOW #from dvdread
  ${CMAKE_CURRENT_SOURCE_DIR}/src/batch
-${KDE4_INCLUDES} ${QT_INCLUDES}
-#${LIBDVDREAD_INCLUDE_DIR}/dvdread
- ${AVCODEC_INCLUDE_DIR}
+ #${KDE4_INCLUDES}
+ ${QT_INCLUDES}
+
+ ${DVDNAV_INCLUDEDIR} 
+ ${DVDREAD_INCLUDEDIR} 
+ #/usr/include/newlib ##TODO: PTZ161103 timespec not defined...
+ #${LIBDVDREAD_INCLUDE_DIR}/dvdread
+
+ ${AVCODEC_INCLUDEDIR}
  ${AVFORMAT_INCLUDE_DIR}
  ${AVUTIL_INCLUDE_DIR}
  ${FFMPEGSCALE_INCLUDE_DIR}
  ${FFMPEG_INCLUDE_DIR}
 )
 
+if(NOT QT5_BUILD)
+  include_directories(
+    ${KDE4_INCLUDES}
+    )
+endif()
 
 set (devices_SRCS
    src/devices/k9cddrive.cpp
@@ -159,34 +197,36 @@ set (subtitles_SRCS
    src/subtitles/k9subtitle2pgm.cpp
 )
 
-set (libdvdnav_SRCS
-#   src/dvdnav/decoder.c 
-#   src/dvdnav/dvdnav.c
-#   src/dvdnav/highlight.c
-#   src/dvdnav/navigation.c
-#   src/dvdnav/read_cache.c
-#   src/dvdnav/remap.c
-#   src/dvdnav/searching.c
-#   src/dvdnav/settings.c
-#   src/dvdnav/vm.c
-#   src/dvdnav/vmcmd.c
-#UPDATED TO CURRENT:
-src/libdvdnav-NOW/dvdnav.c
-src/libdvdnav-NOW/highlight.c
-src/libdvdnav-NOW/read_cache.c
-src/libdvdnav-NOW/searching.c
-src/libdvdnav-NOW/navigation.c
-src/libdvdnav-NOW/settings.c
+if(DVDNAV_FOUND)
+else()
+  set (k9_dvdnav_SRCS
+    #   src/dvdnav/decoder.c 
+    #   src/dvdnav/dvdnav.c
+    #   src/dvdnav/highlight.c
+    #   src/dvdnav/navigation.c
+    #   src/dvdnav/read_cache.c
+    #   src/dvdnav/remap.c
+    #   src/dvdnav/searching.c
+    #   src/dvdnav/settings.c
+    #   src/dvdnav/vm.c
+    #   src/dvdnav/vmcmd.c
+    #UPDATED TO CURRENT:
+    src/libdvdnav-NOW/dvdnav.c
+    src/libdvdnav-NOW/highlight.c
+    src/libdvdnav-NOW/read_cache.c
+    src/libdvdnav-NOW/searching.c
+    src/libdvdnav-NOW/navigation.c
+    src/libdvdnav-NOW/settings.c
 
-src/libdvdnav-NOW/vm/decoder.c  
-src/libdvdnav-NOW/vm/getset.c  
-src/libdvdnav-NOW/vm/play.c
-src/libdvdnav-NOW/vm/vm.c  
-src/libdvdnav-NOW/vm/vmcmd.c  
-src/libdvdnav-NOW/vm/vmget.c
+    src/libdvdnav-NOW/vm/decoder.c  
+    src/libdvdnav-NOW/vm/getset.c  
+    src/libdvdnav-NOW/vm/play.c
+    src/libdvdnav-NOW/vm/vm.c  
+    src/libdvdnav-NOW/vm/vmcmd.c  
+    src/libdvdnav-NOW/vm/vmget.c
+    )
+endif()
 
-
-)
 
 set (vamps_SRCS
   src/vamps/k9fifo.cpp
@@ -194,25 +234,29 @@ set (vamps_SRCS
   src/vamps/k9vamps.cpp
 )
 
-set (dvdread_SRCS
-#   src/dvdread/dvd_input.c
-#   src/dvdread/dvd_reader.c
-#   src/dvdread/dvd_udf.c
-#   src/dvdread/ifo_read.c
-#   src/dvdread/md5.c
-#   src/dvdread/nav_read.c
- src/libdvdread-NOW/bitreader.c  
- src/libdvdread-NOW/md5.c
- src/libdvdread-NOW/ifo_print.c        
- src/libdvdread-NOW/nav_print.c
 
-   src/libdvdread-NOW/dvd_input.c
-   src/libdvdread-NOW/dvd_reader.c
-   src/libdvdread-NOW/dvd_udf.c
-   src/libdvdread-NOW/ifo_read.c
-   src/libdvdread-NOW/md5.c
-   src/libdvdread-NOW/nav_read.c
-)
+#list(APPEND dvdread_SRCS  src/core/k9dvdread.cpp)
+if(NOT DVDREAD_FOUND)
+  list(APPEND dvdread_SRCS
+    #   src/dvdread/dvd_input.c
+    #   src/dvdread/dvd_reader.c
+    #   src/dvdread/dvd_udf.c
+    #   src/dvdread/ifo_read.c
+    #   src/dvdread/md5.c
+    #   src/dvdread/nav_read.c
+    src/libdvdread-NOW/bitreader.c  
+    src/libdvdread-NOW/md5.c
+    src/libdvdread-NOW/ifo_print.c        
+    src/libdvdread-NOW/nav_print.c
+
+    src/libdvdread-NOW/dvd_input.c
+    src/libdvdread-NOW/dvd_reader.c
+    src/libdvdread-NOW/dvd_udf.c
+    src/libdvdread-NOW/ifo_read.c
+    src/libdvdread-NOW/md5.c
+    src/libdvdread-NOW/nav_read.c   
+    )
+endif()
 
 set (core_SRCS
   src/core/k9dvd.cpp
@@ -240,24 +284,23 @@ set (core_SRCS
   src/core/k9dialogs.cpp
   src/core/k9log.cpp
   src/core/k9logview.cpp
+  src/core/k9dvdread.cpp
   )
-
-
 
 if(QT5_BUILD)
-qt5_wrap_ui(core_SRCS
-  src/core/dvdprogress.ui
-  src/core/progress.ui
-  src/core/k9logview.ui
-  )
+  qt5_wrap_ui(core_SRCS
+    src/core/dvdprogress.ui
+    src/core/progress.ui
+    src/core/k9logview.ui
+    )
 
 else() #if not Qt5 Build
-kde4_add_ui_files(core_SRCS
-  src/core/dvdprogress.ui
-  src/core/progress.ui
-  src/core/k9logview.ui
+  kde4_add_ui_files(core_SRCS
+    src/core/dvdprogress.ui
+    src/core/progress.ui
+    src/core/k9logview.ui
 
-  )
+    )
 endif()
 
 set (backup_SRCS
@@ -275,16 +318,16 @@ set (backup_SRCS
 
 
 if(QT5_BUILD)
-qt5_wrap_ui(backup_SRCS
-   src/backup/backupdlg.ui
-   src/backup/mp4dlg.ui
-)
+  qt5_wrap_ui(backup_SRCS
+    src/backup/backupdlg.ui
+    src/backup/mp4dlg.ui
+    )
 
 else()
-kde4_add_ui_files(backup_SRCS
-   src/backup/backupdlg.ui
-   src/backup/mp4dlg.ui
-)
+  kde4_add_ui_files(backup_SRCS
+    src/backup/backupdlg.ui
+    src/backup/mp4dlg.ui
+    )
 endif()
 
 set (mpeg2_SRCS
@@ -337,7 +380,6 @@ qt5_wrap_ui(import_SRCS
    src/import/newTitle.ui
    src/import/processList.ui
 )
-
 else()
 kde4_add_ui_files(import_SRCS
    src/import/chapterEdit.ui
@@ -447,11 +489,9 @@ kde4_add_ui_files(main_SRCS
 )
 endif()
 
-
 set (batch_SRCS
       src/batch/main.cpp
 )
-
 
 set (k9copylib_SRCS
 #   ${libdvdnav_SRCS}
@@ -476,69 +516,91 @@ set(k9copy_SRCS
    ${main_SRCS}
    ${assistant_SRCS}
    main.cpp
-
  )
 
 set(k9play_SRCS
   ${player_SRCS}
- )
-
+  )
 
 set (k9xineplayer_SRCS
    src/xine/main.cpp
    src/xine/k9xineplayer.cpp
 )
 
-
-add_library(dvdread STATIC ${dvdread_SRCS})
-add_library(dvdnav STATIC ${libdvdnav_SRCS})
-target_link_libraries(dvdnav dvdread) 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu99")
-if(QT5_BUILD)
-message("Qt5 Version")
-add_library(k9copylib STATIC ${k9copylib_SRCS})
-target_link_libraries(k9copylib 
-			dvdread dvdnav
-			KF5::WidgetsAddons 	#Tier 1 
-			KF5::Su 		#Tier 3  
-			KF5::I18n 		#Tier 1
-			KF5::ConfigCore 	#Tier 1
-			KF5::Solid 		#Tier 1
-			${LIBMPEG2_LIBRARY} ${LIBMPEG2CONVERT_LIBRARY} ${LIBDL_LIBRARY} 
-			Qt5::Xml
-)
-
+if(DVDREAD_FOUND OR DVDNAV_FOUND)
+  add_library(k9_dvdnav SHARED
+    ${k9_dvdnav_SRCS}
+    ${dvdread_SRCS}
+    )
+  target_link_libraries(k9_dvdnav
+    ${DVDNAV_LIBRARIES}
+    ${DVDREAD_LIBRARIES}
+    ${LIBDL_LIBRARY}
+    ${AVCODEC_LIBRARIES}
+    )
+  set_target_properties(k9_dvdnav
+    PROPERTIES
+    LINKER_LANGUAGE CXX
+    )
+  set(DVD_LIBS k9_dvdnav)
 else()
-message("Qt4 Version")
-kde4_add_library(k9copylib STATIC ${k9copylib_SRCS})
-target_link_libraries(k9copylib dvdread dvdnav ${KDE4_KDEUI_LIBS} ${KDE4_KDESU_LIBS} ${KDE4_KIO_LIBS} ${LIBMPEG2_LIBRARY} ${LIBMPEG2CONVERT_LIBRARY} ${LIBDL_LIBRARY})
-endif(QT5_BUILD)
-add_dependencies(k9copylib SCRIPTED_EDITS)
-
-
-if(QT5_BUILD)
-qt5_wrap_ui(k9copy_SRCS )
-
-
-add_executable(k9copy ${k9copy_SRCS})
-add_executable(k9play ${k9play_SRCS})
-add_executable(k9xineplayer ${k9xineplayer_SRCS})
-
-
-else()
-kde4_add_ui_files(k9copy_SRCS )
-
-kde4_add_executable(k9copy ${k9copy_SRCS})
-kde4_add_executable(k9play ${k9play_SRCS})
-kde4_add_executable(k9xineplayer ${k9xineplayer_SRCS})
-
-
-
- MESSAGE(STATUS "Found library solid: ${KDE4_SOLID_LIBS}")
-
+  inlude_directories(
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/libdvdnav-NOW #from dvdnav
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/libdvdread-NOW #from dvdread
+    )
+  set(DVD_LIBS
+    ${DVDNAV_LIBRARIES}
+    ${DVDREAD_LIBRARIES}
+    ${LIBDL_LIBRARY}
+    )
 endif()
 
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu99")
 
+if(QT5_BUILD)
+  add_library(k9 STATIC ##TODO: PTZ161105 SHARED
+    ${k9copylib_SRCS}
+    )
+  set_target_properties(k9
+    PROPERTIES
+    LINKER_LANGUAGE CXX
+    )
+  target_link_libraries(k9
+    ${DVD_LIBS}
+    KF5::WidgetsAddons 	#Tier 1 
+    KF5::Su 		#Tier 3  
+    KF5::I18n 		#Tier 1
+    KF5::ConfigCore 	#Tier 1
+    KF5::Solid 		#Tier 1
+    ${LIBMPEG2_LIBRARY}
+    ${LIBMPEG2CONVERT_LIBRARY}
+    ${LIBDL_LIBRARY} 
+    Qt5::Xml
+    )
+else()
+  kde4_add_library(k9 STATIC ${k9copylib_SRCS})
+  target_link_libraries(k9 dvdread dvdnav ${KDE4_KDEUI_LIBS} ${KDE4_KDESU_LIBS} ${KDE4_KIO_LIBS} ${LIBMPEG2_LIBRARY} ${LIBMPEG2CONVERT_LIBRARY} ${LIBDL_LIBRARY})
+endif(QT5_BUILD)
+
+add_dependencies(k9 SCRIPTED_EDITS)
+
+if(QT5_BUILD)
+  qt5_wrap_ui(k9copy_SRCS)
+  add_executable(k9copy ${k9copy_SRCS})
+  add_executable(k9play ${k9play_SRCS})
+  include_directories(${XINE_INCLUDE_DIR})
+  add_executable(k9xineplayer ${k9xineplayer_SRCS})
+else()
+  kde4_add_ui_files(k9copy_SRCS )
+  kde4_add_executable(k9copy ${k9copy_SRCS})
+  kde4_add_executable(k9play ${k9play_SRCS})
+  kde4_add_executable(k9xineplayer ${k9xineplayer_SRCS})
+  MESSAGE(STATUS "Found library solid: ${KDE4_SOLID_LIBS}")
+endif()
+
+#target_link_libraries(k9copy
+#  k9copylib
+#  )
 ####### Static and non Static Library
 
 
@@ -546,18 +608,40 @@ endif()
 ################################
 
 if(QT5_BUILD)
-message("Qt5 Version")
-target_link_libraries(k9copy dvdread dvdnav k9copylib 	KF5::WidgetsAddons  	KF5::XmlGui 	KF5::IconThemes 	KF5::KIOCore KF5::KIOWidgets 	${PHONON_LIBRARY} 	KF5::I18n )
-target_link_libraries(k9play dvdread dvdnav k9copylib KF5::WidgetsAddons KF5::XmlGui) 							
-target_link_libraries(k9xineplayer KF5::WidgetsAddons KF5::XmlGui KF5::I18n Qt5::X11Extras ${XINE_LIBRARY} ${X11_X11_LIB} )
+  message("Qt5 Version")
+  target_link_libraries(k9copy
+    k9
+    KF5::WidgetsAddons
+    KF5::XmlGui
+    KF5::IconThemes
+    KF5::KIOCore
+    KF5::KIOWidgets
+    ${PHONON_LIBRARY}
+    KF5::I18n
+    ${DVD_LIBS}
+    )
+  target_link_libraries(k9play
+    ${DVD_LIBS}
+    k9
+    KF5::WidgetsAddons
+    KF5::XmlGui
+    )
+  target_link_libraries(k9xineplayer
+    KF5::WidgetsAddons
+    KF5::XmlGui
+    KF5::I18n
+    Qt5::X11Extras
+    ${XINE_LIBRARY}
+    ${X11_X11_LIB}
+    )
 else()															
-message("Qt4 Version")
-target_link_libraries(k9copy dvdread dvdnav k9copylib ${KDE4_KDEUI_LIBS} ${PHONON_LIBRARY} ${KDE4_SOLID_LIBS})
-target_link_libraries(k9play dvdread dvdnav k9copylib ${KDE4_KDEUI_LIBS}  )
-target_link_libraries(k9xineplayer ${KDE4_KDEUI_LIBS} ${XINE_LIBRARY} ${X11_X11_LIB} )
+  message("Qt4 Version")
+  target_link_libraries(k9copy dvdread dvdnav k9copylib ${KDE4_KDEUI_LIBS} ${PHONON_LIBRARY} ${KDE4_SOLID_LIBS})
+  target_link_libraries(k9play dvdread dvdnav k9copylib ${KDE4_KDEUI_LIBS}  )
+  target_link_libraries(k9xineplayer ${KDE4_KDEUI_LIBS} ${XINE_LIBRARY} ${X11_X11_LIB} )
 endif(QT5_BUILD)
 
-
+install(TARGETS k9 DESTINATION lib)
 install(TARGETS k9copy DESTINATION ${BIN_INSTALL_DIR} )
 install(TARGETS k9play DESTINATION ${BIN_INSTALL_DIR} )
 install(TARGETS k9xineplayer DESTINATION ${BIN_INSTALL_DIR} )
@@ -622,5 +706,6 @@ SET(CPACK_SOURCE_IGNORE_FILES
 "build"
 )
 #SET(CPACK_INSTALL_CMAKE_PROJECTS "${CMAKE_CURRENT_BINARY_DIR};K9Copy;ALL;/" )
+
 INCLUDE(CPack)
 
