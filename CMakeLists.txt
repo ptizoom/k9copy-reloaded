@@ -547,6 +547,19 @@ set(DVD_LIBS
   ${AVCODEC_LIBRARIES}
   )
 
+##TODO: PTZ161105 SHARED
+#/usr/src/k9copy-code/k9copy/src/player/main.cpp:173 : référence indéfinie vers « k9Tools::setBatchCopy(bool) »
+#/usr/src/k9copy-code/k9copy/src/player/main.cpp:204 : référence indéfinie vers « k9play::k9play(QObject*) » ...
+#
+#/usr/src/k9copy-code/k9copy/bld$ nm libk9_5.a | c++filt | grep k9play::k9play
+#                 U k9play::k9play(QObject*)
+#0000000000000864 T k9play::k9play(QObject*)
+#0000000000000864 T k9play::k9play(QObject*)
+#/usr/src/k9copy-code/k9copy/bld$ nm libk9_5.so | c++filt | grep k9play"0 instead of 1 arguments to message {Extracting titleset ...} supplied before conversion."
+#nm libk9_5.so | c++filt | grep k9play::k9play
+#000000000008842c t k9play::k9play(QObject*)
+#000000000008842c t k9play::k9play(QObject*)
+#include_directories(${CMAKE_CURRENT_SOURCE_DIR}/hdr)
 add_library(k9_5 STATIC ##TODO: PTZ161105 SHARED
   ${k9copylib_SRCS}
   ${DVD_SRC}
