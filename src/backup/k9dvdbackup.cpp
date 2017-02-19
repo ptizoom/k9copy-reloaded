@@ -758,7 +758,17 @@ uint32_t k9DVDBackup::findNextVobu(uint32_t _sector) {
 
 }
 
-
+//// TODO: PTZ161123 here VOBU == 0 but crashes in readBlocks()
+// Thread 1 (Thread 0x7ff9505f4340 (LWP 17846)):
+// [KCrash Handler]
+// #6  0x0000000000000000 in ?? ()
+// #7  0x00007ff96b8fb8f8 in InternalUDFReadBlocksRaw (device=0x561dff601f40, lb_number=1148658, block_count=1, data=0x561e00829de0 "X\vGe\371\177", encrypted=1) at src/dvd_reader.c:1230
+// #8  0x00007ff96b8fbf7b in DVDReadBlocks (dvd_file=0x561e007d3d90, offset=903596, block_count=<optimized out>, data=<optimized out>) at src/dvd_reader.c:1369
+// #9  0x0000561dfc95412f in k9DVDFile::readBlocks (this=0x561e0078e050, _sector=903596, _size=1, _buffer=0x561e00829de0 "X\vGe\371\177") at /usr/src/k9copy-code/k9copy/src/core/k9dvdread.cpp:182
+// #10 0x0000561dfc98831c in k9DVDBackup::copyVobu (this=0x561dff4a80e0, _fileHandle=0x561e0078e050, _startSector=903596, _vobu=0x0, _empty=false) at /usr/src/k9copy-code/k9copy/src/backup/k9dvdbackup.cpp:776
+// #11 0x0000561dfc987f55 in k9DVDBackup::playCell (this=0x561dff4a80e0, vts_num=49, _cell=0x561e0061d970, _empty=false) at /usr/src/k9copy-code/k9copy/src/backup/k9dvdbackup.cpp:669
+// #12 0x0000561dfc98612c in k9DVDBackup::copyCell (this=0x561dff4a80e0, _VTS=49, _cell=0x561e0061d970, _empty=false) at /usr/src/k9copy-code/k9copy/src/backup/k9dvdbackup.cpp:282
+// #13 0x0000561dfc98c977 in k9DVDBackup::execute (this=0x561dff4a80e0) at /usr/src/k9copy-code/k9copy/src/backup/k9dvdbackup.cpp:1832
 
 uint32_t k9DVDBackup::copyVobu(k9DVDFile  *_fileHandle, uint32_t _startSector, k9Vobu * _vobu, bool _empty) {
     dsi_t	dsi_pack;
