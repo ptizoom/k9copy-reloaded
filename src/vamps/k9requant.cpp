@@ -26,7 +26,7 @@
 // #define STAT // print stats on exit
 // #define USE_FD // use 2 lasts args for input/output paths
 
-#define NDEBUG // turns off asserts
+//PTZ170223 #define NDEBUG // turns off asserts
 #define REMOVE_BYTE_STUFFING	// removes series of 0x00
 // #define USE_GLOBAL_REGISTER // assign registers to bit buffers
 #define MAX_ERRORS 0 // if above copy slice

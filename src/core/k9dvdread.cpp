@@ -77,8 +77,10 @@ void k9DVDRead::openDevice(const QString & _device) {
 }
 
 k9Ifo2 *k9DVDRead::getIfo(int _num) {
-            ///TODO:PTZ170219 woa, check on _num!!! it is a QList <k9Ifo2*> so might be protected anyhow. but still.
-   k9Ifo2 *ifo=m_ifos[_num];
+    ///TODO:PTZ170219 woa, check on _num!!! it is a QList <k9Ifo2*> so might be protected anyhow. but still.
+    //shall be 1 to m_titlesetCount... surely enough
+    
+    k9Ifo2 *ifo = m_ifos[_num];
 
     return ifo;
 }
@@ -133,7 +135,13 @@ k9DVDFile *k9DVDRead::openTitle(uint _vts) {
     \fn k9DVDFile::openIfo(uint _vts)
  */
 void k9DVDFile::openIfo(uint _vts) {
-	m_file=DVDOpenFile(m_dvd->getDvd(),_vts,DVD_READ_INFO_FILE);
+    if (m_file) {
+        //PTZ170220 really not sure
+        QString sMsg = i18n("k9DVDFile::m_file not NULL for this vts='%1'").arg(_vts);
+        k9Dialogs::error(sMsg, i18n("DVD_READ_INFO_FILE"));
+        close();
+    }
+    m_file=DVDOpenFile(m_dvd->getDvd(),_vts,DVD_READ_INFO_FILE);
 }
 
 
@@ -142,7 +150,13 @@ void k9DVDFile::openIfo(uint _vts) {
  */
 void k9DVDFile::openMenu(uint _vts)
 {
-	m_file=DVDOpenFile(m_dvd->getDvd() ,_vts,DVD_READ_MENU_VOBS);
+    if (m_file) {
+        //PTZ170220 really not sure
+        QString sMsg = i18n("k9DVDFile::m_file not NULL for this vts='%1'").arg(_vts);
+        k9Dialogs::error(sMsg, i18n("DVD_READ_MENU_VOBS"));
+        close();
+    }
+    m_file=DVDOpenFile(m_dvd->getDvd() ,_vts,DVD_READ_MENU_VOBS);
 }
 
 
@@ -151,7 +165,14 @@ void k9DVDFile::openMenu(uint _vts)
  */
 void k9DVDFile::openTitle(uint _vts)
 {
-    	m_file=DVDOpenFile(m_dvd->getDvd(),_vts,DVD_READ_TITLE_VOBS);
+    if (m_file) {
+        //error = true;
+        //sMsg.QString::sprintf(tr2i18n("'%s' not selected"),l_track->getname().latin1());
+        QString sMsg = i18n("k9DVDFile::m_file not NULL for this vts='%1'").arg(_vts);
+        k9Dialogs::error(sMsg, i18n("DVD_READ_TITLE_VOBS"));
+        close(); //todo::PTZ170223 or wait 
+    }
+    m_file=DVDOpenFile(m_dvd->getDvd(),_vts,DVD_READ_TITLE_VOBS);
 }
 
 

@@ -104,13 +104,31 @@ k9DVD::k9DVD(QObject  *parent) :QObject(parent)  {
 
 //   m_titles.setAutoDelete(true);
 //   m_titlesets.setAutoDelete(true);
+// /usr/include/dvdread/ifo_types.h:85:
+    //unsigned char video_format         : 2;
+    
     m_lvideoFormat.append("NTSC");
     m_lvideoFormat.append("PAL");
-
+    //PTZ170626 improvised...
+    m_lvideoFormat.append("SECAM");
+    m_lvideoFormat.append("MAC");
+#if 0   
+    //PTZ170626 as in /usr/include/mpeg2dec/mpeg2.h, x265.h
+    m_lvideoFormat.append("COMPONENT");
+    m_lvideoFormat.append("PAL");
+    m_lvideoFormat.append("NTSC");
+    m_lvideoFormat.append("SECAM");
+    m_lvideoFormat.append("MAC");
+    m_lvideoFormat.append("UNSPECIFIED");
+#endif
+    
     m_laspectRatio.append("4:3");
     m_laspectRatio.append("16:9");
     m_laspectRatio.append("?:?");
     m_laspectRatio.append("16:9");
+    
+    //PTZ170626 /usr/include/linux/dvb/video.h:33:    
+    m_laspectRatio.append("2.21:1");
 
     m_lquantization.append("16bps");
     m_lquantization.append("20bps");
@@ -427,9 +445,13 @@ int k9DVD::scandvd (const QString & device,bool _quickScan) {
 
     m_title=( has_title ? i18n("unknown") : ctitle);
 
-    for (int ts=1;ts <=m_titlesetCount;ts++) {
+    for (int ts=1; ts <= m_titlesetCount; ts++) {
         tt_srpt = ifo_zero->tt_srpt;
-        kifo=m_dvd.getIfo(ts);
+        kifo = m_dvd.getIfo(ts);
+        if (kifo == NULL) {
+            setError(i18n("Can't get DVD IFO tileset %1\n").arg(ts));
+            return 2;
+        }
         ifo = kifo->getIFO();
         if (ifo==NULL) {
             //ifo is null when trying to open a protected dvd
@@ -475,8 +497,7 @@ int k9DVD::scandvd (const QString & device,bool _quickScan) {
                 int titleStartSector=pgc->cell_playback[0].first_sector;
                 //l_track=addTitle(j+1,title_set_nr,ifo->vts_ptt_srpt->title[vts_ttn - 1].ptt[0].pgcn - 1,titleStartSector,isTitleIndex(ifo_zero,ts,vts_ttn));
                 l_track=addTitle(titleset,m_titleCount, numTitle,title_set_nr,j,titleStartSector, entryPgc);
-                titleset->add
-                (l_track);
+                titleset->add(l_track);
 
                 sh.sprintf("%02x",pgc->playback_time.hour);
                 sm.sprintf("%02x",pgc->playback_time.minute);
@@ -496,7 +517,33 @@ int k9DVD::scandvd (const QString & device,bool _quickScan) {
                 l_track->VTS = ts;//  ifo_zero->tt_srpt->title[j].title_set_nr;
                 l_track->TTN = ttn; // ifo_zero->tt_srpt->title[j].vts_ttn;
                 l_track->FPS = m_frames_per_s[(pgc->playback_time.frame_u & 0xc0) >> 6];
-                l_track->format= m_lvideoFormat[video_attr->video_format];
+
+// #PTZ170627  bug in dvdscan @ init (password filled)
+// ##11 0x0000559bb17712db in k9DVD::scandvd (this=0x559bb3800fb0, device=..., _quickScan=false) at /homes/christian/prj/dvd/k9copy.git/src/core/k9dvd.cpp:499
+// #499                     l_track->format= m_lvideoFormat[video_attr->video_format];
+// #(gdb) p m_lvideoFormat
+// ##$4 = {<QList<QString>> = {<QListSpecialMethods<QString>> = {<No data fields>}, {p = {static shared_null = {ref = {atomic = {_q_value = {<std::__atomic_base<int>> = {static _S_alignment = 4, _M_i = -1}, <No data fields>}}}, alloc = 0, 
+// #          begin = 0, end = 0, array = {0x0}}, d = 0x559bb3784ce0}, d = 0x559bb3784ce0}}, <No data fields>}
+// #has not been filled. <=====
+// #(gdb) p* video_attr
+// #$3 = {mpeg_version = 2 '\002', video_format = 3 '\003', display_aspect_ratio = 1 '\001', permitted_df = 1 '\001', line21_cc_1 = 0 '\000', line21_cc_2 = 0 '\000', unknown1 = 0 '\000', bit_rate = 0 '\000', picture_size = 0 '\000', 
+// actually only NTSC and PAL dhould have been set anyway
+                // k9DVD::k9DVD is IFO dead or corrupted?
+                // or is it a new librarie!
+                {
+                    int _i = video_attr->video_format;
+                    if (_i >= m_lvideoFormat.size()) {
+                        QString c = i18n("wrong video format # '%1', defaulting to last: '%2'")
+                            .arg(_i)
+                            .arg(m_lvideoFormat.last());
+                        setError(c);
+                        
+                        _i = m_lvideoFormat.size() - 1;
+
+                        //k9Dialogs::error(c);
+                    }                                                                       
+                    l_track->format= m_lvideoFormat[_i];
+                }
                 m_format = l_track->format;
                 /*      QStringList::Iterator it;
                 it= videoFormat.at(video_attr->video_format);

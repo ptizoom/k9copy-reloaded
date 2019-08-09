@@ -105,7 +105,7 @@ void k9DVDProgress::setlblTotal(QString& text){
     //#7  0x0000555a17a49c3e in k9DVD::slotTotalText (this=0x555a1990fef0, text=...) at /usr/src/k9copy-code/k9copy/src/core/k9dvd.cpp:1073
     //...from scandvd(,)
     if (Ui_DVDProgress.lblTotal) { //TODO::PTZ170106 might do the trick
-        //not when reused...free does not work?!
+        //TODO::PTZ170630 not when reused...free does not work?!
         Ui_DVDProgress.lblTotal->setText(text);
     }
 }
