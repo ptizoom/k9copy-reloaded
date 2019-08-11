@@ -20,7 +20,7 @@
 #ifndef K9DIALOGS_H
 #define K9DIALOGS_H
 
-
+#include "k9time.h"
 #include <QString>
 #include <QStringList>
 #include <QFont>

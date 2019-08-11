@@ -12,6 +12,7 @@
 #ifndef K9DRAWIMAGE_H
 #define K9DRAWIMAGE_H
 
+#include "k9time.h"
 #include <QWidget>
 #include <QPixmap>
 #include <QMutex>

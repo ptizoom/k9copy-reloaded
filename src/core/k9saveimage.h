@@ -12,6 +12,7 @@
 #ifndef K9SAVEIMAGE_H
 #define K9SAVEIMAGE_H
 
+#include "k9time.h"
 #include <qthread.h>
 #include <qobject.h>
 #include <qdatetime.h>

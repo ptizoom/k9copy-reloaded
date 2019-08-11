@@ -1,6 +1,6 @@
 #ifndef K9MENUSCENE_H
 #define K9MENUSCENE_H
-
+#include "k9time.h"
 #include <QGraphicsScene>
 #include <QPainter>
 class k9MenuScene : public QGraphicsScene

@@ -24,20 +24,6 @@
      #include <stdint.h>
 #endif
 
-#if defined(HAVE_TIME_H)
-//TODO:PTZ161103 screewy-dooby __USE_XOPEN2K8 features
-#include <time.h>
-#if ! defined(__timespec_defined)
-# define __timespec_defined	1
-# include <bits/types.h>	/* This defines __time_t for us.  */
-struct timespec
-{
-    __time_t tv_sec;		/* Seconds.  */
-    __syscall_slong_t tv_nsec;	/* Nanoseconds.  */
-};
-#endif
-#endif
-
 #ifdef __FreeBSD__
     #include <osreldate.h>
 #endif
@@ -47,9 +33,9 @@ struct timespec
 #include "dvdread/nav_read.h" //PM DVDREAD
 #include "dvdread/nav_types.h" //PM DVDREAD
 
+#include "k9time.h"
 #include <QtCore>
 #include <QtCore/QGlobalStatic>
-
 #include <QObject>
 
 #ifndef DVD_BLOCK_LEN

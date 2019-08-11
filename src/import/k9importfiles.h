@@ -15,9 +15,8 @@
 #ifndef _K9IMPORTFILES_H_
 #define _K9IMPORTFILES_H_
 
-#include <config.h>
-#include <kxmlguiwindow.h>
 #include "k9common.h"
+#include <kxmlguiwindow.h>
 #include "k9cddrive.h"
 #include "k9copy.h"
 

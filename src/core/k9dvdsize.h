@@ -12,7 +12,10 @@
 #ifndef K9DVDSIZE_H
 #define K9DVDSIZE_H
 
+#include "k9time.h"
+
 #include <QObject>
+
 /**
 @author Jean-Michel PETIT
 */

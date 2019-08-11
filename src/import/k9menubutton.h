@@ -11,7 +11,7 @@
 //
 #ifndef K9MENUBUTTON_H
 #define K9MENUBUTTON_H
-
+#include "k9time.h"
 #include <qobject.h>
 #include <qpixmap.h>
 #include <qimage.h>

@@ -20,6 +20,7 @@
 #ifndef K9CELL_H
 #define K9CELL_H
 
+#include "k9time.h"
 #include <QMutexLocker>
 #include <QReadWriteLock>
 #include <QAtomicPointer>

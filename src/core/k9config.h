@@ -12,6 +12,8 @@
 //
 #ifndef K9CONFIG_H
 #define K9CONFIG_H
+
+#include "k9time.h"
 #include <QColor>
 #include <QFont>
 

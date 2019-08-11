@@ -15,9 +15,9 @@
 #ifndef _K9COPY_H_
 #define _K9COPY_H_
 
-#include <config.h>
-#include <kxmlguiwindow.h>
 #include "k9common.h"
+#include <kxmlguiwindow.h>
+
 #include "k9cddrive.h"
 #if QT_VERSION >= 0x050000
 #include <qapplication.h>

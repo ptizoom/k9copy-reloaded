@@ -11,6 +11,9 @@
 //
 #ifndef K9PROCESS_H
 #define K9PROCESS_H
+
+#include "k9time.h"
+
 #include <QDateTime>
 #include <QEventLoop>
 #include <KProcess>

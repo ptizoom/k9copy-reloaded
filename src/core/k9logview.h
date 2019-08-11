@@ -1,6 +1,7 @@
 #ifndef K9LOGVIEW_H
 #define K9LOGVIEW_H
 
+#include "k9time.h"
 #include <QWidget>
 #include <QTimer>
 #include <QObject>

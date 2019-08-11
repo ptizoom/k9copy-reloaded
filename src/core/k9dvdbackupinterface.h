@@ -20,6 +20,7 @@
 #ifndef K9DVDBACKUPINTERFACE_H
 #define K9DVDBACKUPINTERFACE_H
 
+#include "k9time.h"
 #include <QObject>
 #include <stdint.h>
 class k9vamps;

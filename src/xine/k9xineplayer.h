@@ -21,6 +21,7 @@
  ***************************************************************************/
 #ifndef K9XINEPLAYER_H
 #define K9XINEPLAYER_H
+#include "k9time.h"
 #include <QDBusAbstractAdaptor>
 #include <QWidget>
 #include <xine.h>

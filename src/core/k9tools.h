@@ -13,6 +13,8 @@
 #ifndef K9TOOLS_H
 #define K9TOOLS_H
 
+#include "k9time.h"
+
 #include <QString>
 #include <QList>
 #include <QComboBox>
