@@ -25,6 +25,8 @@ public:
   virtual void drawImage( QImage *image){
  	Q_UNUSED(image);
   };
+  virtual  ~k9InternalPlayer() {};
+  //PTZ190812 has virtual functions and accessible non-virtual destructor
 };
 
 
