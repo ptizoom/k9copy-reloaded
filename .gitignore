@@ -1,7 +1,14 @@
 *~
+*.orig
+*_
 
+
+*.patch
+*.patch.gz
 
 /bld
 
 #genrated ui
 *.ui
+
+TAGS
