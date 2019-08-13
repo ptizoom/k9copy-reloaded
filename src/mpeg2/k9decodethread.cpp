@@ -98,9 +98,9 @@ void k9DecodeThread::run() {
     noData=FALSE;
       m_decmpeg2->start();
       while (1) {
-       int count=2048;
-       uchar buffer[count];
-       uint32_t size=readData(buffer,count);
+       #define MAX_BUF 2048
+       uchar buffer[MAX_BUF];
+       uint32_t size = readData(buffer, sizeof(buffer));
        if (size==0 && noData)
        break;
        m_decmpeg2->decode(buffer ,buffer+size,0);
