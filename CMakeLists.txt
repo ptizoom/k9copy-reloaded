@@ -109,6 +109,12 @@ include(KDECompilerSettings)
 include(KDECMakeSettings)
 include(FeatureSummary)
 
+include(GenerateExportHeader)
+include(ECMAddAppIcon)
+include(ECMQtDeclareLoggingCategory)
+
+set(CMAKE_AUTORCC ON)
+
 find_package(Phonon4Qt5 REQUIRED)
 
 find_package(X11 REQUIRED)
