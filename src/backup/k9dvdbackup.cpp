@@ -313,7 +313,7 @@ void k9DVDBackup::copyEmptyPgc(int _vts,k9Cell *_cell) {
     sector = _cell->startSector;
     setProgress(sector);
     dsi_t	 dsi_pack;
-    uint32_t	 nsectors;
+    //uint32_t	 nsectors;
 
     len=dvdfile->readBlocks (sector, 1, buffer);
     //JMP : D V C
@@ -334,7 +334,7 @@ void k9DVDBackup::copyEmptyPgc(int _vts,k9Cell *_cell) {
     currCell->addNewVobus((char*)buffer,DVD_VIDEO_LB_LEN,currCell->cellList->getPosition()+1,currVOB,outputFile->pos());
     outputFile->write((char*)buffer,DVD_VIDEO_LB_LEN);
 
-    nsectors=1;
+    //nsectors=1;
     len=1;
 
     //vobu->size +=nsectors;
@@ -919,7 +919,8 @@ k9Vobu * k9DVDBackup::remapVobu(uint32_t *value) {
 k9Vobu * k9DVDBackup::remapOffset(uint32_t _sector,uint32_t *_offset,int _dir) {
     k9Vobu *vobu1=NULL, *vobu2=NULL;
     uint32_t offset,sector;
-    uint32_t maskOffset1=0,maskOffset2=0,maskSector=0;
+    uint32_t maskOffset1=0, maskOffset2=0;
+    //,maskSector=0;
 
     if ((*_offset!= 0xbfffffff) && (*_offset!=0x3fffffff) && (*_offset!=0x7fffffff)) {
 
@@ -931,10 +932,10 @@ k9Vobu * k9DVDBackup::remapOffset(uint32_t _sector,uint32_t *_offset,int _dir) {
 
         if ( (_sector & 0x80000000) == 0x80000000) {
             sector = _sector & 0x7FFFFFFF;
-            maskSector=0x80000000;
+            //maskSector=0x80000000;
         } else {
             sector =_sector;
-            maskSector=0;
+            //maskSector=0;
         }
 
         k9CellList *lstCell;
@@ -1081,7 +1082,7 @@ void k9DVDBackup::updateMainIfo() {
 
 void k9DVDBackup::updatePgci_ut(ifo_handle_t *_hifo) {
     pgci_ut_t *pgci_ut=_hifo->pgci_ut;
-    k9Vobu* vobu2=NULL;
+    //k9Vobu* vobu2=NULL;
     uint newPos=0;
     //update pgci_ut
 
@@ -1105,12 +1106,12 @@ void k9DVDBackup::updatePgci_ut(ifo_handle_t *_hifo) {
                 cell_playback_t *cell_playback =pgc->cell_playback;
                 uint32_t nr= pgc->nr_of_cells;
 
-                vobu2=NULL;
+                //vobu2=NULL;
                 cell_playback_t cell;
                 newPos=0;
                 for ( uint32_t j = 0; j < nr; j++) {
                     k9Vobu *vobu=remapVobu(&cell_playback[j].first_sector);
-                    vobu2=vobu;
+                    //vobu2=vobu;
 
                     if (cell_playback[j].first_ilvu_end_sector !=0) {
                         uint32_t tmp=cell_playback[j].first_ilvu_end_sector+1;

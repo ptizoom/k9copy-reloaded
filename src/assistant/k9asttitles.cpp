@@ -135,9 +135,8 @@ void k9astTitles::itemActivated(QTreeWidgetItem* _item,int) {
 void k9astTitles::CurrentItemChanged(QTreeWidgetItem *_new,QTreeWidgetItem *_old) {
     if (m_updating)
         return;
-    _k9ItemWidget *previous,*current;
-    previous=(_k9ItemWidget*)_old;
-    current=(_k9ItemWidget*)_new;
+    //_k9ItemWidget *previous = (_k9ItemWidget*)_old;
+    _k9ItemWidget *current =  (_k9ItemWidget*)_new;
     if (current) {
         if (current->type() ==TITLE) {
 /*            for (int i=0;i <m_src->topLevelItemCount();i++) {

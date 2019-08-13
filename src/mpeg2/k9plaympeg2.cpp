@@ -72,6 +72,7 @@ void k9PlayMPEG2::playTitle() {
     }
 
     /* set the language */
+    //TODO:PTZ190812 ISO C++ forbids converting a string constant to char*
     if (dvdnav_menu_language_select(dvdnav, DVD_LANGUAGE) != DVDNAV_STATUS_OK ||
             dvdnav_audio_language_select(dvdnav, DVD_LANGUAGE) != DVDNAV_STATUS_OK ||
             dvdnav_spu_language_select(dvdnav, DVD_LANGUAGE) != DVDNAV_STATUS_OK) {
@@ -272,7 +273,7 @@ k9DecodeThread *k9PlayMPEG2::getDecoder() {
 void k9PlayMPEG2::open (dvd_reader_t *dvd,const QString & device,k9DVDTitle * title,int chapter=0) {
     m_dvd=dvd;
     m_chapter=chapter;
-    int  ret = 0;
+    //int  ret = 0;
     struct stat dvd_stat;
     QString c;
     m_idxLect=0xFFFFFFFF;
@@ -284,13 +285,14 @@ void k9PlayMPEG2::open (dvd_reader_t *dvd,const QString & device,k9DVDTitle * ti
 
     m_startSector=0;
     m_lastSector=0;
-    ret = stat(device.toUtf8(), &dvd_stat);
+    //int ret =
+    stat(device.toUtf8(), &dvd_stat);
   /*  if ( ret < 0 ) {
         c=i18n("Can't find device %1\n").arg(device.latin1());
         setError(c);
         return;
     }
-*/
+  */
     m_title=title;
 
     m_startSector=m_title->getChapter( 0)->getstartSector();
