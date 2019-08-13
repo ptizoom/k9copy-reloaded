@@ -31,7 +31,6 @@
 #include <KToggleAction>
 #include <QObject>
 
-static QLabel *sbMessageQt,*sbFactorQt,*sbSelSizeQt;
 enum eStatusBarId {sbMessage=0,sbFactor=1,sbSelSize=2};
 
 class k9Import;

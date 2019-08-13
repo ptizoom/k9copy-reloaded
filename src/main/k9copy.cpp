@@ -57,6 +57,10 @@
 
 #endif
 
+//PTZ190811 defined but not used
+//*sbMessageQt,
+static QLabel *sbFactorQt,*sbSelSizeQt;
+
 k9Copy::k9Copy()
         : KXmlGuiWindow( ) {
    // accept dnd
