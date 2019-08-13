@@ -70,7 +70,7 @@ void k9ExecCopy::copyDVD() {
     long fs=k9Tools::getFreeSpace(outputDir);
     int maxSize=config.getPrefSize() < (m_dvd->getsizeSelected(false)/512) ? config.getPrefSize():(m_dvd->getsizeSelected(false)/512);
      if ((fs < maxSize) && (fs !=-1)) {
-        if (k9Dialogs::warningContinueCancel ( i18n("Insufficient disk space on %1\n%2 MB expected.").arg(outputDir).arg(config.getPrefSize()),i18n("DVD Copy"))==cancel)
+        if (k9Dialogs::warningContinueCancel ( i18n("Insufficient disk space on %1\n%2 MB expected.", outputDir, config.getPrefSize()),i18n("DVD Copy"))==cancel)
             return;
     }
 
@@ -188,7 +188,7 @@ void k9ExecCopy::CreateMP4() {
 
             if (matroska) {
                 if ( ! k9Tools::checkProgram("mkvmerge") ) {
-                    k9Dialogs::error (i18n("Unable to run %1").arg("mkvmerge") , i18n("Encoding error"));
+                    k9Dialogs::error (i18n("Unable to run mkvmerge") , i18n("Encoding error"));
 		    delete mp4;
                     return ;
                 }

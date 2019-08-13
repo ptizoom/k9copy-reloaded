@@ -137,7 +137,7 @@ k9DVDFile *k9DVDRead::openTitle(uint _vts) {
 void k9DVDFile::openIfo(uint _vts) {
     if (m_file) {
         //PTZ170220 really not sure
-        QString sMsg = i18n("k9DVDFile::m_file not NULL for this vts='%1'").arg(_vts);
+        QString sMsg = i18n("k9DVDFile::m_file not NULL for this vts='%1'", _vts);
         k9Dialogs::error(sMsg, i18n("DVD_READ_INFO_FILE"));
         close();
     }
@@ -152,7 +152,7 @@ void k9DVDFile::openMenu(uint _vts)
 {
     if (m_file) {
         //PTZ170220 really not sure
-        QString sMsg = i18n("k9DVDFile::m_file not NULL for this vts='%1'").arg(_vts);
+        QString sMsg = i18n("k9DVDFile::m_file not NULL for this vts='%1'", _vts);
         k9Dialogs::error(sMsg, i18n("DVD_READ_MENU_VOBS"));
         close();
     }
@@ -168,7 +168,7 @@ void k9DVDFile::openTitle(uint _vts)
     if (m_file) {
         //error = true;
         //sMsg.QString::sprintf(tr2i18n("'%s' not selected"),l_track->getname().latin1());
-        QString sMsg = i18n("k9DVDFile::m_file not NULL for this vts='%1'").arg(_vts);
+        QString sMsg = i18n("k9DVDFile::m_file not NULL for this vts='%1'", _vts);
         k9Dialogs::error(sMsg, i18n("DVD_READ_TITLE_VOBS"));
         close(); //todo::PTZ170223 or wait 
     }

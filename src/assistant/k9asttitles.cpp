@@ -276,22 +276,22 @@ void k9astTitles::addChapters(QTreeWidgetItem *_parent,k9DVDTitle *_title) {
     int ch=0;
     for (int i=0;i< _title->getchapterCount();i++) {
         _k9ItemWidget *it =new _k9ItemWidget(_title->getChapter(i),_parent,k9astTitles::CHAPTER);
-        it->setText(1,i18n("chapter %1").arg(++ch));
+        it->setText(1,i18n("chapter %1", ++ch));
         QString s;
 
         s=QString("%1").arg((double)(_title->getChapter(i)->getsectors()) /512,0,'f',2);
 	it->setText(2,QString("%1").arg(_title->getChapter(i)->getLength().toString("hh:mm:ss")));
-        it->setText(3,i18n("%1 MB").arg(s));
+        it->setText(3,i18n("%1 MB", s));
     }
     for (int j=0;j <_title->getTitles().count();j++) {
         k9DVDTitle *title2=_title->getTitles().at(j);
         for (int i=0;i< title2->getchapterCount();i++) {
             _k9ItemWidget *it =new _k9ItemWidget(title2->getChapter(i),_parent,k9astTitles::CHAPTER);
-            it->setText(1,i18n("chapter %1").arg(++ch));
+            it->setText(1,i18n("chapter %1", ++ch));
             QString s;
             s=QString("%1").arg((double)(title2->getChapter(i)->getsectors()) /512,0,'f',2);
 	    it->setText(2,QString("%1").arg(title2->getChapter(i)->getLength().toString("hh:mm:ss")));
-            it->setText(3,i18n("%1 MB").arg(s));
+            it->setText(3,i18n("%1 MB", s));
         }
 
     }

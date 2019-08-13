@@ -366,7 +366,7 @@ void k9play::play() {
     /* set read ahead cache usage */
     if (dvdnav_set_readahead_flag(dvdnav, DVD_READ_CACHE) != DVDNAV_STATUS_OK) {
         writeOutput( QString("ERR:Error on dvdnav_set_readahead_flag: %1\n").arg(dvdnav_err_to_string(dvdnav)));
-        emit sigError(i18n("Error on dvdnav_set_readahead_flag: %1").arg(dvdnav_err_to_string(dvdnav)));
+        emit sigError(i18n("Error on dvdnav_set_readahead_flag: %1", dvdnav_err_to_string(dvdnav)));
         end();
         return;
     }
@@ -392,7 +392,7 @@ void k9play::play() {
                 dvdnav_audio_language_select(dvdnav, DVD_LANGUAGE) != DVDNAV_STATUS_OK ||
                 dvdnav_spu_language_select(dvdnav, DVD_LANGUAGE) != DVDNAV_STATUS_OK) {
             writeOutput( QString("ERR:Error on setting languages: %1\n").arg(dvdnav_err_to_string(dvdnav)));
-            emit sigError(i18n("Error on setting languages: %1").arg(dvdnav_err_to_string(dvdnav)));
+            emit sigError(i18n("Error on setting languages: %1", dvdnav_err_to_string(dvdnav)));
             end();
             return ;
         }
@@ -401,7 +401,7 @@ void k9play::play() {
      * whole feature instead of just relatively to the current chapter */
     if (dvdnav_set_PGC_positioning_flag(dvdnav, 1) != DVDNAV_STATUS_OK) {
         writeOutput(QString("ERR:Error on dvdnav_set_PGC_positioning_flag: %1\n").arg(dvdnav_err_to_string(dvdnav)));
-        emit sigError(i18n("Error on dvdnav_set_PGC_positioning_flag: %1").arg(dvdnav_err_to_string(dvdnav)));;
+        emit sigError(i18n("Error on dvdnav_set_PGC_positioning_flag: %1", dvdnav_err_to_string(dvdnav)));;
         end();
         return ;
     }
@@ -436,7 +436,7 @@ void k9play::play() {
 
         if (result == DVDNAV_STATUS_ERR) {
             writeOutput(QString("ERR:Error getting next block: %1\n").arg(dvdnav_err_to_string(dvdnav)));
-            emit sigError(i18n("Error getting next block: %1").arg(dvdnav_err_to_string(dvdnav)));
+            emit sigError(i18n("Error getting next block: %1", dvdnav_err_to_string(dvdnav)));
             end();
             return;
         }

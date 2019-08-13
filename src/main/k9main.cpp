@@ -535,7 +535,7 @@ void k9Main::Open() {
         ckLvItem *tsItem = new ckLvItem ( root,this,TITLESET );
         tsItem->setExpanded ( TRUE );
         QString c;
-        c=i18n ( "Titleset %1").arg(i+1 );
+        c=i18n ( "Titleset %1", i+1 );
         tsItem->setText ( 0,c );
         QFont font=tsItem->font ( 1 );
         font.setWeight ( QFont::Bold );
@@ -613,11 +613,11 @@ void k9Main::addChapters ( QTreeWidgetItem *_parent,k9DVDTitle *_title ) {
     int ch=0;
     for ( int i=0;i< _title->getchapterCount();i++ ) {
         ckLvItem *it =new ckLvItem ( chapter,this,CHAPTER );
-        it->setText ( 0,i18n ( "chapter %1").arg(++ch ) );
+        it->setText ( 0,i18n ( "chapter %1", ++ch ) );
         QString s;
 
         s=QString ( "%1" ).arg ( ( double ) ( _title->getChapter ( i )->getsectors() ) /512,0,'f',2 );
-        it->setText ( 1,i18n ( "%1 MB").arg(s ) );
+        it->setText ( 1,i18n ( "%1 MB", s ) );
         it->setTextAlignment ( 1,Qt::AlignRight | Qt::AlignVCenter);
         it->setTextAlignment ( 2,Qt::AlignRight | Qt::AlignVCenter);
 
@@ -631,13 +631,13 @@ void k9Main::addChapters ( QTreeWidgetItem *_parent,k9DVDTitle *_title ) {
         k9DVDTitle *title2=_title->getTitles().at ( j );
         for ( int i=0;i< title2->getchapterCount();i++ ) {
             ckLvItem *it =new ckLvItem ( chapter,this,CHAPTER );
-            it->setText ( 0,i18n ( "chapter %1").arg(++ch ) );
+            it->setText ( 0,i18n ( "chapter %1", ++ch ) );
             it->streamType=CHAP;
             it->obj=title2->getChapter ( i );
             QString s;
             s=QString ( "%1" ).arg ( ( double ) ( title2->getChapter ( i )->getsectors() ) /512,0,'f',2 );
 
-            it->setText ( 1,i18n ( "%1 MB").arg(s ) );
+            it->setText ( 1,i18n ( "%1 MB", s ) );
             it->setTextAlignment ( 1,Qt::AlignRight | Qt::AlignVCenter );
             it->setTextAlignment ( 2,Qt::AlignRight | Qt::AlignVCenter );
 
@@ -690,7 +690,7 @@ void k9Main::addTitle ( k9DVDTitle *track ) {
     video->setIcon ( 0,SmallIcon ( "video" ) );
     addListItem ( track,video,VID );
     video->setExpanded ( false );
-    c=i18n ( "video %1 ").arg(track->getformat() );
+    c=i18n ( "video %1 ", track->getformat() );
     c.append ( " - " + track->getaspectRatio() );
      
     video->setText ( col1, c );
@@ -703,7 +703,7 @@ void k9Main::addTitle ( k9DVDTitle *track ) {
 
     for ( i=0;i< track->getaudioStreamCount();i++ ) {
         l_auds=track->getaudioStream ( i );
-        c=i18n ( "audio %1 ").arg(i+1 );
+        c=i18n ( "audio %1 ", i+1 );
         c.append ( l_auds->getlanguage() + " " +l_auds->getformat() +" " );
         ch.sprintf ( "%dch ",l_auds->getchannels() );
         c.append ( ch+l_auds->getfrequency() +" "+l_auds->getquantization() );
@@ -727,7 +727,7 @@ void k9Main::addTitle ( k9DVDTitle *track ) {
     }
     for ( i=0;i< track->getsubPictureCount();i++ ) {
         l_sub=track->getsubtitle ( i );
-        c=i18n ( "subpicture %1 ").arg(i+1 );
+        c=i18n ( "subpicture %1 ", i+1 );
         c.append ( l_sub->getlanguage() );
         ckLvItem * item = new ckLvItem ( itemTrack,this,STREAM );
 
@@ -1482,7 +1482,7 @@ void k9Main::updateFactor_internal() {
 	}
         else {
             changeStatusbar ( QString::number ( dbfactor,'f',2 ),sbFactor );
-            changeStatusbar ( i18n("%1 MB").arg(QString::number ((double)sizeSelected/512.,'f',2)),sbSelSize);
+            changeStatusbar ( i18n("%1 MB", QString::number ((double)sizeSelected/512.,'f',2)),sbSelSize);
 	}
         emit SelectionChanged ( dvd,withMenus() );
         m_mutex.unlock();

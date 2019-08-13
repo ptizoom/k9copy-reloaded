@@ -175,7 +175,7 @@ void k9NewDVD::addTitles (QDomElement &_root) {
         QString menuFileName=m_workDir+k9Tools::randomFileName()+".mpg";
         m_tmpFiles << menuFileName,
         menu->setMenuFileName(menuFileName);
-        m_processList->addProgress(i18n("Creating menu for title %1").arg(title->getNum()+1));
+        m_processList->addProgress(i18n("Creating menu for title %1", title->getNum()+1));
         if (!menu->createMenus(&titleSet))
 		return;
 
@@ -282,7 +282,7 @@ void k9NewDVD::createMencoderCmd(QString &_cmd,QString &_chapters, k9AviFile *_a
             break;
         }
 
-        k9Process *process=m_processList->addProcess(i18n("Encoding %1").arg(_aviFile->getFileName()));
+        k9Process *process=m_processList->addProcess(i18n("Encoding %1", _aviFile->getFileName()));
         m_processList->setFileName(process,_aviFile->getFileName());
 
         QTime t(0,0);
@@ -499,7 +499,7 @@ void k9NewDVD::appendTitle(k9Title *_title) {
     btn->setHeight(m_config->getPrefButtonHeight());
     btn->setScript(QString("g1=0;jump titleset %1  menu;").arg(_title->getNum()+1));
     btn->setTextPosition(RIGHT);
-    btn->setText(i18n("title %1").arg(_title->getNum()+1));
+    btn->setText(i18n("title %1", _title->getNum()+1));
     btn->setColor(m_config->getPrefButtonTextColor());
     btn->setFont(m_config->getPrefButtonFont());
 

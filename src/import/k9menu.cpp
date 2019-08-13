@@ -145,7 +145,7 @@ void k9Menu::convertJpegToMpeg(const QString &_imageJpg,const QString &_imageMpg
 void k9Menu::createAudio(const QString & _audioFile) {
     if (! (k9Tools::checkProgram("twolame",false) || k9Tools::checkProgram("toolame",false))) {
 	m_error=true;
-        k9Dialogs::error(i18n("Error starting program %1").arg("twolame | toolame"),i18n("Running program"));
+        k9Dialogs::error(i18n("Error starting program twolame | toolame"),i18n("Running program"));
 	return;
     }
 

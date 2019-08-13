@@ -295,13 +295,13 @@ void k9DVDBackup::copyEmptyPgc(int _vts,k9Cell *_cell) {
     k9DVDFile *dvdfile;
     if ((dvdfile = m_dvdread->openTitle( _vts))== 0) {
         QString stmp;
-        stmp=i18n("Unable to open titleset %1").arg(_vts);
+        stmp=i18n("Unable to open titleset %1", _vts);
         seterror(stmp);
         return ;
     }
     setTotalSteps(vts_handle->vtsi_mat->vts_last_sector-vts_handle->vtsi_mat->vtstt_vobs  -1);
     QString c;
-    c=i18n("Extracting titleset %1").arg(_vts);
+    c=i18n("Extracting titleset %1", _vts);
     setProgressLabel(c);
     if (!k9Tools::getBatchCopy())
         backupDlg->show();
@@ -499,7 +499,7 @@ uint32_t k9DVDBackup::copyMenu2(int _vts) {
     k9DVDFile *dvdfile;
     if ((dvdfile = m_dvdread->openMenu( _vts))== 0) {
         QString stmp;
-        stmp=i18n("Unable to open menu for titleset %1").arg(_vts);
+        stmp=i18n("Unable to open menu for titleset %1", _vts);
         seterror (stmp);
         return 0;
     }
@@ -525,7 +525,7 @@ uint32_t k9DVDBackup::copyMenu2(int _vts) {
     uint32_t sector, dsi_next_vobu = 0;
     uint32_t imax=length/sizeof(cell_adr_t);
     QString c;
-    c=i18n("Extracting menu for titleset %1").arg(_vts);
+    c=i18n("Extracting menu for titleset %1", _vts);
     setProgressLabel(c);
     if (!k9Tools::getBatchCopy()) {
         backupDlg->show();
@@ -619,7 +619,7 @@ void k9DVDBackup::playCell (int vts_num, k9Cell *_cell,bool _empty) {
         vts_handle=currTS->ifoTitle->getIFO();
         if (!vts_handle) {
             QString stmp;
-            stmp=i18n("Unable to open ifo file for titleset %1").arg(vts_num);
+            stmp=i18n("Unable to open ifo file for titleset %1", vts_num);
             seterror (stmp);
             //JMP            vamps->setNoData();
             return;
@@ -627,7 +627,7 @@ void k9DVDBackup::playCell (int vts_num, k9Cell *_cell,bool _empty) {
 
         setTotalSteps( vts_handle->vtsi_mat->vts_last_sector-vts_handle->vtsi_mat->vtstt_vobs  -1);
         QString c;
-        c=i18n("Extracting titleset %1").arg(vts_num);
+        c=i18n("Extracting titleset %1", vts_num);
         setProgressLabel(c);
         if (!k9Tools::getBatchCopy())
             backupDlg->show();
@@ -642,7 +642,7 @@ void k9DVDBackup::playCell (int vts_num, k9Cell *_cell,bool _empty) {
     dvdfile = m_dvdread->openTitle (vts_num);
     if (! dvdfile) {
         QString stmp;
-        stmp=i18n("Unable to open vobs for titleset %1").arg(vts_num);
+        stmp=i18n("Unable to open vobs for titleset %1", vts_num);
         seterror( stmp);
         //JMP        vamps->setNoData();
         return;
@@ -1497,7 +1497,7 @@ void k9DVDBackup::updateVob(k9CellList *cellLst) {
                     sName="VIDEO_TS.VOB";
                 else
                     sName.sprintf("VTS_%02d_%d.VOB",(int)currVTS,(int)VobNum);
-                dbg=i18n("Updating vob %1").arg(sName);
+                dbg=i18n("Updating vob %1", sName);
                 sName=output+"/"+sName;
                 QFileInfo finfo(sName);
                 long fileSize=finfo.size();

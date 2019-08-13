@@ -160,7 +160,7 @@ void k9xine::setTitle( const QString & _numTitle,const QString &) {
 	qDebug() << m_process->debug();
 
 	if (!m_process->start()) {
-                k9Dialogs::error (i18n("Unable to run %1").arg("k9xineplayer") , i18n("Preview"));
+            k9Dialogs::error (i18n("Unable to run k9xineplayer") , i18n("Preview"));
 	} else {
             while (!m_ready) k9Tools::processEvents();
 	}

@@ -148,7 +148,7 @@ const QString &k9BurnDVD::getImageSize() {
         proc2->sync();
         if (proc2->exitStatus()==0) {
             delete proc2;
-            k9log::add(i18n("image size : %1").arg(imageSize),k9logLevel::INFO);
+            k9log::add(i18n("image size : %1", imageSize),k9logLevel::INFO);
             return imageSize;
         }
     }
@@ -234,7 +234,7 @@ void k9BurnDVD::burnWithGenisoimage() {
             connect( proc2, SIGNAL(receivedStdout(char *, int)),this, SLOT(mkisoSizeStdout(char *, int)) );
             k9log::add(i18n("computing image size"),k9logLevel::INFO);
             proc2->setShellCommand(proc2Cmd.join(" "));;
-            k9log::add(i18n("starting thread : %1").arg(proc2Cmd.join(" ")),k9logLevel::INFO);
+            k9log::add(i18n("starting thread : %1", proc2Cmd.join(" ")),k9logLevel::INFO);
             proc2->start();
             proc2->sync();
             getWodimCmd(procCmd);
@@ -255,12 +255,12 @@ void k9BurnDVD::burnWithGenisoimage() {
 
         if (!cancelled) {
             k9log::add(i18n("start burning"),k9logLevel::INFO);
-            k9log::add(i18n("starting thread : %1").arg(procCmd.join(" ")),k9logLevel::INFO);
+            k9log::add(i18n("starting thread : %1", procCmd.join(" ")),k9logLevel::INFO);
 
             int res=progress->execute();
             if ( res==-1 ) {
                 k9log::add(i18n("Error"),k9logLevel::ERROR);
-                k9Dialogs::error( i18n("Error burning DVD :\n")+i18n("Unable to run %1").arg("genisoimage"), i18n("DVD burning") );
+                k9Dialogs::error( i18n("Error burning DVD :\n")+i18n("Unable to run genisoimage"), i18n("DVD burning") );
                 cancelled=true;
             } else {
 
@@ -353,13 +353,13 @@ void k9BurnDVD::burnWithGrowisofs() {
         }
         if (!cancelled) {
             k9log::add(i18n("start burning"),k9logLevel::INFO);
-            k9log::add(i18n("starting thread : %1").arg(proc->debug()),k9logLevel::INFO);
+            k9log::add(i18n("starting thread : %1", proc->debug()),k9logLevel::INFO);
 
             int res=progress->execute();
             if ( res==-1 ) {
                 k9log::add(i18n("Error"),k9logLevel::ERROR);
 
-                k9Dialogs::error( i18n("Error burning DVD :\n")+i18n("Unable to run %1").arg(progname), i18n("DVD burning") );
+                k9Dialogs::error( i18n("Error burning DVD :\n")+i18n("Unable to run %1", progname), i18n("DVD burning") );
                 cancelled=true;
             } else {
 
@@ -413,7 +413,7 @@ void k9BurnDVD::growisoStderr(char *buffer, int buflen) {
         }
 
         progress->setTitle(i18n("Burning DVD"));
-        progress->setLabelText(i18n("Current write speed :%1 x").arg(burnSpeed));
+        progress->setLabelText(i18n("Current write speed :%1 x", burnSpeed));
         if (c.contains("% done")) {
             pos=c.indexOf("%");
             if (pos!=-1) {
@@ -433,7 +433,7 @@ void k9BurnDVD::growisoStderr(char *buffer, int buflen) {
                 }
             }
         }
-        else k9log::add(i18n("%1").arg(c),k9logLevel::INFO);
+        else k9log::add(i18n("%1", c),k9logLevel::INFO);
     }
 }
 void k9BurnDVD::growisoStdout(char *buffer, int buflen) {

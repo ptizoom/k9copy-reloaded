@@ -60,20 +60,20 @@ k9AviDecode::k9AviDecode(QObject *parent, const char *)
     m_error="";
     QStringList errs;
     if (!CodecHandle) {
-        errs << i18n("Cannot open the library %1").arg("libavcodec");
+        errs << i18n("Cannot open the library libavcodec");
     }
     if (!FormatHandle ) {
-        errs << i18n("Cannot open the library %1").arg("libavformat");
+        errs << i18n("Cannot open the library libavformat");
     }
 #   if LIBAVUTIL_VERSION_INT >= AV_VERSION_INT(51, 33, 0)
     if (!UtilHandle) {
-        m_error =i18n("Cannot open then library %1").arg("libavutil");
+        m_error =i18n("Cannot open then library libavutil");
         return;
     }
 #   endif
 #ifdef HAVE_SWSCALE
     if (!SwscaleHandle) {
-        errs << i18n("Cannot open the library %1").arg("libswscale");
+        errs << i18n("Cannot open the library libswscale");
     }
 #endif
 
@@ -108,7 +108,7 @@ k9AviDecode::k9AviDecode(QObject *parent, const char *)
     img_convert = (img_convert_t)dlsym(CodecHandle,"img_convert");
 //if img_convert is null (deprecated in ffmpeg), we need libswscale
     if (!img_convert)
-      errs << i18n("Cannot open the library %1").arg("libswscale");
+      errs << i18n("Cannot open the library libswscale");
 #endif
     av_free = (av_free_t)dlsym(CodecHandle,"av_free");
     av_free_packet = (av_free_packet_t)dlsym(CodecHandle,"av_packet_unref");
@@ -185,7 +185,7 @@ bool k9AviDecode::open(const QString & _fileName) {
         av_open_input_file(&m_FormatCtx, _fileName.toUtf8(), NULL, 0, NULL)!=0
 #       endif
        ) {
-        m_error=i18n("Couldn't open the file %1").arg(_fileName);
+        m_error=i18n("Couldn't open the file %1", _fileName);
         return false; // Couldn't open file}
     }
 // Retrieve stream information

@@ -186,7 +186,7 @@ void k9Import::addChapter() {
 
 
    k9LvItemImport * itemch=new k9LvItemImport(title,k9LvItemImport::CHAPTER);
-   itemch->setText(0,i18n("chapter %1").arg(title->childCount()));
+   itemch->setText(0,i18n("chapter %1", title->childCount()));
    itemch->setAviFile(file);
    itemch->setTitle(title->getTitle());
    connect(file,SIGNAL(aviFileUpdated(k9AviFile*)),this,SLOT(aviFileUpdated(k9AviFile*)));
@@ -201,7 +201,7 @@ void k9Import::addChapter() {
    btn->setHeight(config.getPrefButtonHeight());
    btn->setScript(QString("jump title 1 chapter %1 ;").arg(title->childCount()));
    btn->setTextPosition(BOTTOM);
-   btn->setText(i18n("chapter %1").arg(title->childCount()));
+   btn->setText(i18n("chapter %1", title->childCount()));
    btn->setColor(config.getPrefButtonTextColor());
    btn->setFont(config.getPrefButtonFont());
    file->setButton(btn);

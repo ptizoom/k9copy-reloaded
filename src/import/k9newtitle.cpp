@@ -126,7 +126,7 @@ void k9NewTitle::bAddClicked() {
     k9LvItemImport *item=new k9LvItemImport(m_k9Import->getRoot(),k9LvItemImport::TITLE);
     item->setExpanded(true);
     k9Title *title=new k9Title( m_k9Import->getNewDVD());
-    item->setText(0,i18n("title %1").arg(title->getNum() +1));
+    item->setText(0,i18n("title %1", title->getNum() +1));
 
     connect( title->getButton(),SIGNAL(sigsetImage(k9MenuButton*, const QImage&)),m_k9Import,SLOT(buttonUpdated(k9MenuButton*, const QImage&)));
     item->setTitle(title);
@@ -180,7 +180,7 @@ void k9NewTitle::bAddClicked() {
         file->setEnd(t.addMSecs(qMin(pos,fileInfo.getDuration()) *1000));
 	file->setReencode(!Ui_newTitle.ckReencode->isChecked());
         k9LvItemImport * itemch=new k9LvItemImport(item,k9LvItemImport::CHAPTER);
-        itemch->setText(0,i18n("chapter %1").arg(i+1));
+        itemch->setText(0,i18n("chapter %1", i+1));
         itemch->setText(1,file->getStart().toString("hh:mm:ss") +" - "+file->getEnd().toString("hh:mm:ss") );
         itemch->setAviFile(file);
         itemch->setTitle(title);
@@ -202,7 +202,7 @@ void k9NewTitle::bAddClicked() {
         btn->setHeight(height);
         btn->setScript(QString("jump title 1 chapter %1 ;").arg(i+1));
         btn->setTextPosition(BOTTOM);
-        btn->setText(i18n("chapter %1").arg(i+1));
+        btn->setText(i18n("chapter %1", i+1));
         btn->setColor(config.getPrefButtonTextColor());
         btn->setFont(config.getPrefButtonFont());
 	file->setButton(btn);

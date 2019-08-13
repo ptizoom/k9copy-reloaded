@@ -174,7 +174,7 @@ void K9Mplayer::bPlayClick() {
 
     qDebug() << m_process->debug();
     if (!m_process->start()) {
-         k9Dialogs::error (i18n("Unable to run %1").arg("mplayer") , i18n("Preview"));
+         k9Dialogs::error (i18n("Unable to run mplayer") , i18n("Preview"));
     }
 
     m_canwrite=TRUE;

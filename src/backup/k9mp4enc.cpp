@@ -157,8 +157,8 @@ bool k9MP4Enc::check() {
 
     if (!m_extractAudio) {
         if ( ! k9Tools::checkProgram(sCodecV) ) {
-            k9log::add(i18n("Unable to run %1").arg(sCodecV),k9logLevel::ERROR);
-            k9Dialogs::error (i18n("Unable to run %1").arg(sCodecV) , i18n("Encoding error"));
+            k9log::add(i18n("Unable to run %1", sCodecV),k9logLevel::ERROR);
+            k9Dialogs::error (i18n("Unable to run %1", sCodecV) , i18n("Encoding error"));
             m_error = TRUE;
             return false;
         }
@@ -168,8 +168,8 @@ bool k9MP4Enc::check() {
 
     if ((sCodecA!=sCodecV) || m_extractAudio) {
         if ( ! k9Tools::checkProgram(sCodecA) ) {
-            k9log::add(i18n("Unable to run %1").arg(sCodecV),k9logLevel::ERROR);
-            k9Dialogs::error (i18n("Unable to run %1").arg(sCodecA) , i18n("Encoding error"));
+            k9log::add(i18n("Unable to run %1", sCodecV),k9logLevel::ERROR);
+            k9Dialogs::error (i18n("Unable to run %1", sCodecA) , i18n("Encoding error"));
             m_error = TRUE;
             return false;
         }
@@ -181,12 +181,12 @@ bool k9MP4Enc::check() {
 
 void k9MP4Enc::execute(k9DVDTitle *_title) {
     if (m_mpeg2)
-        k9log::add(i18n("Starting extraction of %1, chapters %2").arg(_title->getname()).arg(getChapterList( _title)),k9logLevel::INFO);
+        k9log::add(i18n("Starting extraction of %1, chapters %2", _title->getname(), getChapterList( _title)),k9logLevel::INFO);
     else
-        k9log::add(i18n("Starting encoding of %1, chapters %2").arg(_title->getname()).arg(getChapterList( _title)),k9logLevel::INFO);
-    k9log::add(i18n("source : %1").arg(m_device),k9logLevel::INFO);
-    k9log::add(i18n("destination : %1").arg(m_filename),k9logLevel::INFO);
-    k9log::add(i18n("disk cache : %1").arg( m_usecache ? i18n("activated"):i18n("disabled")),k9logLevel::INFO);
+        k9log::add(i18n("Starting encoding of %1, chapters %2", _title->getname(), getChapterList( _title)),k9logLevel::INFO);
+    k9log::add(i18n("source : %1", m_device),k9logLevel::INFO);
+    k9log::add(i18n("destination : %1", m_filename),k9logLevel::INFO);
+    k9log::add(i18n("disk cache : %1",  m_usecache ? i18n("activated"):i18n("disabled")),k9logLevel::INFO);
     m_currentChapter=0;
     m_error=false;
     m_outputFile=NULL;
@@ -205,14 +205,14 @@ void k9MP4Enc::execute(k9DVDTitle *_title) {
     m_remain="--:--:--";
 
     m_totalSize=_title->getChaptersSize(true);
-    k9log::add(i18n("size : %1 MB").arg(m_totalSize/512),k9logLevel::INFO);
+    k9log::add(i18n("size : %1 MB", m_totalSize/512),k9logLevel::INFO);
     if (!m_mpeg2) {
-        k9log::add(i18n("audio bitrate : %1").arg(m_audioBitrate),k9logLevel::INFO);
+        k9log::add(i18n("audio bitrate : %1", m_audioBitrate),k9logLevel::INFO);
         if (!m_extractAudio) {
             if (m_videoBitrate !="")
-                k9log::add(i18n("user defined video bitrate : %1").arg(m_videoBitrate),k9logLevel::INFO);
+                k9log::add(i18n("user defined video bitrate : %1", m_videoBitrate),k9logLevel::INFO);
             else
-                k9log::add(i18n("calculated video bitrate : %1").arg(getBitRate(_title)),k9logLevel::INFO);
+                k9log::add(i18n("calculated video bitrate : %1", getBitRate(_title)),k9logLevel::INFO);
             }
     }
     QString injectName;
@@ -239,7 +239,7 @@ void k9MP4Enc::execute(k9DVDTitle *_title) {
 
         do {
             if (!m_mpeg2)
-                k9log::add(i18n("starting pass %1 of %2").arg(pass==0 ? 1:pass).arg(maxPass==0 ? 1 : maxPass),k9logLevel::INFO);
+                k9log::add(i18n("starting pass %1 of %2", pass==0 ? 1:pass, maxPass==0 ? 1 : maxPass),k9logLevel::INFO);
             m_totalBytes=0;
             m_vamps=new k9vamps(this,m_usecache);;
             m_player=new k9play(this);
@@ -507,7 +507,7 @@ void k9MP4Enc::buildAudioCmd(k9DVDTitle *title) {
 
             QString sAOption=replaceParams(audioCodecs->getOptions(m_audioCodec)).trimmed();
 
-            m_progress->setTitleLabel(i18n("Encoding %1").arg(sCodec));
+            m_progress->setTitleLabel(i18n("Encoding %1", sCodec));
             QString path,ext=audioCodecs->getExtension(m_audioCodec) ;
             if (!ext.startsWith("."))
                 ext="."+ext;
@@ -519,7 +519,7 @@ void k9MP4Enc::buildAudioCmd(k9DVDTitle *title) {
 
             cmd  << m_ffmpegPath << "-i" << "/dev/stdin" <<sAOption.split(" ") <<  KShell::quoteArg(path) ;
 
-            k9log::add(i18n("starting thread : %1").arg(cmd.join(" ")),k9logLevel::INFO);
+            k9log::add(i18n("starting thread : %1", cmd.join(" ")),k9logLevel::INFO);
             k9ConvertAudio *converter=new k9ConvertAudio("",cmd);
             m_converters[BASE_CONV_AUDIO+i]=converter;
             m_convertersToDelete << converter;
@@ -571,9 +571,9 @@ void k9MP4Enc::buildFFMpegCmd(int pass,k9DVDTitle *title,QStringList &cmd) {
     cmd << sVOption.split(" ");
 
     if (pass >0)
-        m_progress->setTitleLabel(i18n("Encoding %1").arg(sCodec)+" - "+i18n("pass %1").arg(pass));
+        m_progress->setTitleLabel(i18n("Encoding %1", sCodec)+" - "+i18n("pass %1", pass));
     else
-        m_progress->setTitleLabel(i18n("Encoding %1").arg(sCodec));
+        m_progress->setTitleLabel(i18n("Encoding %1", sCodec));
 
     if (m_fourcc !="")
         cmd << "-vtag" << m_fourcc;
@@ -640,7 +640,7 @@ void k9MP4Enc::buildFFMpegCmd(int pass,k9DVDTitle *title,QStringList &cmd) {
     cmd << "-y"  << KShell::quoteArg(path);
     cmd << slNewAudio;
 //    if (m_extractMkv) {
-    k9log::add(i18n("starting thread : %1").arg(cmd.join(" ")),k9logLevel::INFO);
+    k9log::add(i18n("starting thread : %1", cmd.join(" ")),k9logLevel::INFO);
     k9ConvertAudio *converter=new k9ConvertAudio("",cmd);
     //converter->setDebug(true);
     m_converters[BASE_CONV_VIDEO]=converter;
@@ -690,9 +690,9 @@ void k9MP4Enc::buildMEncoderCmd(int pass,int part,k9DVDTitle *title,const QStrin
 
 
     if (pass >0)
-        m_progress->setTitleLabel(i18n("Encoding %1").arg(sCodec)+" - "+i18n("pass %1").arg(pass));
+        m_progress->setTitleLabel(i18n("Encoding %1", sCodec)+" - "+i18n("pass %1", pass));
     else
-        m_progress->setTitleLabel(i18n("Encoding %1").arg(sCodec));
+        m_progress->setTitleLabel(i18n("Encoding %1", sCodec));
 
     if (m_fourcc !="")
         cmd << "-ffourcc" << m_fourcc;
@@ -747,7 +747,7 @@ void k9MP4Enc::buildMEncoderCmd(int pass,int part,k9DVDTitle *title,const QStrin
         //      cmd << "-of" << "lavf";
         //      cmd << "-lavfopts" << "i_certify_that_my_video_stream_does_not_use_b_frames";
     }
-    k9log::add(i18n("starting thread : %1").arg(cmd.join(" ")),k9logLevel::INFO);
+    k9log::add(i18n("starting thread : %1", cmd.join(" ")),k9logLevel::INFO);
     k9ConvertAudio *converter=new k9ConvertAudio("",cmd);
     converter->setDebug(false);
     m_converters[BASE_CONV_VIDEO]=converter;
@@ -894,7 +894,7 @@ void k9MP4Enc::getOutput(eStreamType streamType,int streamNumber,uchar *buffer,u
         else {
             m_player->setAborted(true);
             m_error=true;
-            m_msgError=i18n("An error occured while encoding the %1 stream").arg(i18n("audio"));
+            m_msgError=i18n("An error occured while encoding the %1 stream", i18n("audio"));
             m_ErrorDetail=c->getOutput();
             k9log::add(m_msgError,k9logLevel::ERROR);
         }
@@ -919,7 +919,7 @@ void k9MP4Enc::getOutput(eStreamType streamType,int streamNumber,uchar *buffer,u
             else {
                 m_player->setAborted(true);
                 m_error=true;
-                m_msgError=i18n("An error occured while encoding the %1 stream").arg(i18n("video"));
+                m_msgError=i18n("An error occured while encoding the %1 stream", i18n("video"));
                 m_ErrorDetail=c->getOutput();
                 k9log::add(m_msgError,k9logLevel::ERROR);
             }

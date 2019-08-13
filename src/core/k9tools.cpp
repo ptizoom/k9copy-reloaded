@@ -91,7 +91,7 @@ bool k9Tools::checkProgram(QString _progName,bool _msg) {
     bool res= KStandardDirs::findExe( _progName,NULL,false) !=NULL ;
     #endif
     if (_msg && !res)
-        k9Dialogs::error(i18n("Error starting program %1").arg(_progName),i18n("Running program"));
+        k9Dialogs::error(i18n("Error starting program %1", _progName),i18n("Running program"));
     return res;
 
 }

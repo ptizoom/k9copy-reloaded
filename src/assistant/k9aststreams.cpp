@@ -54,7 +54,7 @@ _k9StreamWidget::_k9StreamWidget(k9DVDAudioStream *_stream,QTreeWidgetItem *_tre
     showDefault(false);
     setFlags(Qt::ItemIsEnabled | Qt::ItemIsUserCheckable | Qt::ItemIsSelectable);
     setCheckState(0,_stream->getselected()?Qt::Checked:Qt::Unchecked);
-    setText(0,i18n("%4 - %1 %2 %3 ch").arg(_stream->getlanguage()).arg(_stream->getformat()).arg(_stream->getchannels()).arg(_stream->getID()));
+    setText(0,i18n("%4 - %1 %2 %3 ch", _stream->getlanguage(), _stream->getformat(), _stream->getchannels(), _stream->getID()));
     setIcon(0,SmallIcon("sound"))    ;
     //setText(1,i18n("%1 MB",_stream->getsize_mb()));
 }
@@ -65,7 +65,7 @@ _k9StreamWidget::_k9StreamWidget(k9DVDSubtitle *_stream,QTreeWidgetItem *_treeWi
     showDefault(false);
     setFlags(Qt::ItemIsEnabled | Qt::ItemIsUserCheckable | Qt::ItemIsSelectable);
     setCheckState(0,_stream->getselected()?Qt::Checked:Qt::Unchecked);
-    setText(0,i18n("%3 - %1 %2").arg(_stream->getlanguage()).arg(_stream->getcontent()).arg(_stream->getID().first()));
+    setText(0,i18n("%3 - %1 %2", _stream->getlanguage(), _stream->getcontent(), _stream->getID().first()));
     setIcon(0,SmallIcon("subtitle"));
 
     //setText(1,i18n("%1 MB",_stream->getsize_mb()));

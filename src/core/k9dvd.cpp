@@ -237,7 +237,7 @@ int k9DVD::get_title_name(const char* dvd_device, char* title) {
     int  i;
     QString c;
     if (! (filehandle = fopen(dvd_device, "r"))) {
-        c=i18n("Couldn't open %1 for title\n").arg(dvd_device);
+        c=i18n("Couldn't open %1 for title\n", dvd_device);
         // setError(c );
         strcpy(title, i18n("unknown").toUtf8());
         return -1;
@@ -245,7 +245,7 @@ int k9DVD::get_title_name(const char* dvd_device, char* title) {
 
     if ( fseek(filehandle, 32808, SEEK_SET )) {
         fclose(filehandle);
-        c=i18n("Couldn't seek in %1 for title\n").arg(dvd_device);
+        c=i18n("Couldn't seek in %1 for title\n", dvd_device);
         setError(c);
         strcpy(title, i18n("unknown").toUtf8());
         return -1;
@@ -417,7 +417,7 @@ int k9DVD::scandvd (const QString & device,bool _quickScan) {
         m_dvd.close();
     m_dvd.openDevice(device);
     if ( !m_dvd.opened() ) {
-        c=i18n("Can't open disc %1!\n").arg(device);
+        c=i18n("Can't open disc %1!\n", device);
         setError(c);
         return 2;
     }
@@ -449,13 +449,13 @@ int k9DVD::scandvd (const QString & device,bool _quickScan) {
         tt_srpt = ifo_zero->tt_srpt;
         kifo = m_dvd.getIfo(ts);
         if (kifo == NULL) {
-            setError(i18n("Can't get DVD IFO tileset %1\n").arg(ts));
+            setError(i18n("Can't get DVD IFO tileset %1\n",ts));
             return 2;
         }
         ifo = kifo->getIFO();
         if (ifo==NULL) {
             //ifo is null when trying to open a protected dvd
-            setError(i18n("Can't open disc %1!\n").arg(device));
+            setError(i18n("Can't open disc %1!\n", device));
             return 2;
             //continue;
         }
@@ -480,9 +480,7 @@ int k9DVD::scandvd (const QString & device,bool _quickScan) {
 
                 //JMPtxt=i18n("Title %1").arg(indexedCount);
                 
-                //TODO:PTZ161210 txt=i18n("Title %1").arg(numTitle); experiement
-                txt=i18n("Title %1", numTitle);
-                //txt=tr("Title %1").arg(numTitle);
+                txt = i18n("Title %1", numTitle);
                 
                 emit sigTotalText (txt);
                 emit sigTitleProgress(numTitle,ltitles);
@@ -798,7 +796,9 @@ k9DVDTitle* k9DVD::addTitle(k9DVDTitleset *_titleset,int id,int num,uint _VTS,in
     }
     if (bappend)
         m_titles.append(track);
-    track->name=i18n("Title %1").arg(num);
+    //PTZ190812 https://phabricator.kde.org/R157:c7095f150d7d4de85a8bd62331b20f4f7aba717c
+    //   track->name = i18n("Title %1").arg(num);
+    track->name = i18n("Title %1", num);
 
     if (!_indexed) {
         for (int i=0;i<m_titles.count();i++) {
@@ -968,7 +968,7 @@ long k9DVD::stream_vob( int title, unsigned long startblock, unsigned long lastb
     QString c;
     dvdfile =m_dvd.openTitle( title);
     if ( !dvdfile ) {
-        c=i18n("Error opening vobs for title %1\n").arg(title);
+        c=i18n("Error opening vobs for title %1\n", title);
         setError(c);
         return 0;
     }
@@ -979,7 +979,8 @@ long k9DVD::stream_vob( int title, unsigned long startblock, unsigned long lastb
         emit sigVobProgress(i-startblock,lastblock-startblock);
         total+=size;
         if ( !size ) {
-            c=i18n("ERROR reading block %1\n").arg(i);
+            //PTZ190812 (I18N_ARGUMENT_MISSING) with i18n().arg() ...
+            c = i18n("ERROR reading block %1\n", i);
             setError(c);
             break;
         }

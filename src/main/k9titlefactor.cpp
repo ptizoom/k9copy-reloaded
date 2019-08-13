@@ -60,7 +60,7 @@ void k9TitleFactor::ckAutoClicked(bool checked) {
         }
 	double size;
 	size =m_current->getChaptersSize_mb(true) / getFactor();
-        Ui_titleFactor.lTargetSize->setText(i18n("size : %1 MB").arg(size ));
+        Ui_titleFactor.lTargetSize->setText(i18n("size : %1 MB", size ));
     }
 }
 
@@ -97,7 +97,7 @@ void k9TitleFactor::slFactor_valueChanged( int ) {
  		Ui_titleFactor.tFactor->setText(QString("%1").arg(getFactor(),4,'f',2));
 		size =m_current->getChaptersSize_mb(true) / getFactor();
 	}
-        Ui_titleFactor.lTargetSize->setText(i18n("size : %1 MB").arg(size ));
+        Ui_titleFactor.lTargetSize->setText(i18n("size : %1 MB", size ));
 
 
     }
@@ -118,7 +118,7 @@ void k9TitleFactor::changedTitle(k9DVDTitle *_title) {
 	Ui_titleFactor.gbTitle->setChecked(m_current->getforceFactor());
 	m_updating=false;
 	
-        Ui_titleFactor.lbTitle->setText(i18n("Shrink Factor for %1").arg(m_current->getname()));
+        Ui_titleFactor.lbTitle->setText(i18n("Shrink Factor for %1", m_current->getname()));
 	double size;
 	if (m_current->getforceFactor()) {
 		Ui_titleFactor.slFactor->setValue(m_current->getfactor()*100.0);
@@ -131,7 +131,7 @@ void k9TitleFactor::changedTitle(k9DVDTitle *_title) {
 		Ui_titleFactor.slFactor->setMinimum(100);
 		size =m_current->getChaptersSize_mb(true) / getFactor();
 	}
-        Ui_titleFactor.lTargetSize->setText(i18n("size : %1 MB").arg(size ));
+        Ui_titleFactor.lTargetSize->setText(i18n("size : %1 MB", size ));
 		
 }
 

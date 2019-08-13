@@ -162,7 +162,7 @@ void k9DVDAuthor::addMenus(QDomElement &titleSet) {
             error=true;
             QString sMsg;
             //sMsg.QString::sprintf(tr2i18n("'%s' not selected"),l_track->getname().latin1());
-            sMsg=i18n("'%1' not selected").arg(l_track->getname());
+            sMsg=i18n("'%1' not selected", l_track->getname());
             k9Dialogs::error( sMsg, i18n("authoring"));
         }
         start.sprintf("jump titleset %d menu;",DVD->getnewTitleNum(l_track));
@@ -416,7 +416,7 @@ void k9DVDAuthor::addTitle(QDomElement &root, k9DVDTitle *title) {
             c.sprintf("g1=%d;\ncall vmgm menu;",DVD->getnewTitleNum(l_next));
             if ( DVD->getnewTitleNum(l_next)==-1) {
                 error=true;
-                c=i18n("'%1' not selected").arg(l_next->getname());
+                c=i18n("'%1' not selected", l_next->getname());
                 k9Dialogs::error( c, i18n("authoring"));
             }
 
@@ -440,7 +440,7 @@ void k9DVDAuthor::setworkDir( const QString& _newVal) {
 void k9DVDAuthor::author() {
     k9Config config;
     if ( ! k9Tools::checkProgram("dvdauthor")) {
-        k9Dialogs::error (i18n("Unable to run %1").arg("dvdauthor") , i18n("authoring"));
+        k9Dialogs::error (i18n("Unable to run dvdauthor") , i18n("authoring"));
         error = TRUE;
         return;
     }

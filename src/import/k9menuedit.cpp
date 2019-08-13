@@ -298,7 +298,7 @@ void k9MenuEdit::titleSelected(k9Title *_title) {
     disconnect (this,SIGNAL(endScriptChanged(const QString&)),0,0);
     Ui_menuEdit.cbEnd->setEnabled(true);
     m_scene->clearSelection();;
-    Ui_menuEdit.lTitle->setText(i18n("Title %1 Menu").arg(_title->getNum()+1));
+    Ui_menuEdit.lTitle->setText(i18n("Title %1 Menu", _title->getNum()+1));
     setScene(_title->getMenu()->getScene());
     m_menuType=TITLEMENU;
     Ui_menuEdit.cbStart->clear();
@@ -322,7 +322,7 @@ void k9MenuEdit::titleSelected(k9Title *_title) {
     k9NewDVD *newDVD=(k9NewDVD*)_title->parent() ;
     k9NewDVDItems *items=newDVD->getTitles();
     foreach (k9Title *title,*items) {
-        Ui_menuEdit.cbEnd->addItem(i18n("Play Title %1").arg(title->getNum()+1));
+        Ui_menuEdit.cbEnd->addItem(i18n("Play Title %1", title->getNum()+1));
         QString script=QString("g6=%1; call vmgm menu;" ).arg(title->getNum()+1);
         m_endScripts << script;
     }
@@ -348,7 +348,7 @@ void k9MenuEdit::rootSelected(k9NewDVD *_newDVD) {
     m_startScripts << "";
     k9NewDVDItems *items=_newDVD->getTitles();
     foreach (k9Title *title,*items) {
-        Ui_menuEdit.cbStart->addItem(i18n("Play Title %1").arg(title->getNum()+1));
+        Ui_menuEdit.cbStart->addItem(i18n("Play Title %1", title->getNum()+1));
         // QString script=QString("if (g5==0) {g5=1; jump title %1;}" ).arg(title->getNum()+1);
         QString script=QString("g6=%1;" ).arg(title->getNum()+1);
         m_startScripts << script;
